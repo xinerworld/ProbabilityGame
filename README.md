@@ -1,2 +1,2 @@
 # ProbabilityGame
-lottery os double ball game
+lottery of double ball game
