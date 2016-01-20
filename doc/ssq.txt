@@ -1,0 +1,35 @@
+http://baidu.lecai.com/lottery/draw/list/50?type=range&start=2015001&end=2015101
+
+http://baidu.lecai.com/lottery/draw/view/50
+
+Probability game
+
+
+
+
+<dblball-year year="">
+	<dblball-month month="">
+		<doubleball data="" stage="">
+			<redball>
+				a,b,c,d,e,f
+			</redball>
+			<blueball>
+				g
+			</blueball>
+			<luckball>
+				h
+			</luckball>
+		</doubleball>
+	</dblball-month>
+</dblball-year>
+
+
+
+	
+	
+
+
+
+
+
+
