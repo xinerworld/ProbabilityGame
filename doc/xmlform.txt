@@ -1,13 +1,15 @@
-<lottery year="">
-	<stage value="", moon="", date="">
-		<rball>
-			<em></em><em></em><em></em><em></em><em></em><em></em>
-		</rball>
-		<bball>
-			<em></em>
-		</bball>
-		<lball>
-			<em></em>
-		</lball>
-	</stage>f
+<lottery type="">
+	<box year="">
+		<paper stage="", moon="", date="">
+			<redBall>
+				<num></num><num></num><num></num><num></num><num></num><num></num>
+			</redBall>
+			<blueBall>
+				<num></num>
+			</blueBall>
+			<luckBall>
+				<num></num>
+			</luckBall>
+		</paper>
+	</box>
 </lottery>

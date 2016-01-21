@@ -19,6 +19,18 @@ import com.xiner.game.data.CommonData;
 
 public class AnalysisXML
 {
+	private final String EM_Lottery = "lottery";
+	private final String EM_Statistic = "statistic";
+	private final String EM_Box = "box";
+	private final String EM_Box_Att_Year = "year";
+	private final String EM_Paper = "paper";
+	private final String EM_Paper_Att_Stage = "stage";
+	private final String EM_Paper_Att_Moon = "moon";
+	private final String EM_Paper_Att_Date = "date";
+	private final String EM_RedBall = "redBall";
+	private final String EM_BlueBall = "blueBall";
+	private final String EM_LuckBall = "luckBall";
+	private final String EM_Num = "num";
 
 	public AnalysisXML()
 	{
@@ -36,11 +48,107 @@ public class AnalysisXML
 			SAXReader sr = new SAXReader();
 			Document doc = sr.read(xmlPath);
 			
-			analysisDom(doc);
+			//get root name
+			Element root = doc.getRootElement();
+			String rootName = root.getName();
+			
+			if (EM_Lottery.equals(rootName))
+			{
+				analysisLottery(root);
+			}
+			else if (EM_Statistic.equals(rootName))
+			{
+				analysisStatistic(root);
+			}
 		} catch (DocumentException e)
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	private void analysisLottery(Element root)
+	{
+		//get box list
+		List<Element> boxList = root.elements(EM_Box);
+		for (Element boxElement : boxList)
+		{
+			//get year
+			Attribute boxAttYear = boxElement.attribute(EM_Box_Att_Year);
+			String year = boxAttYear.getValue();
+			
+			//get paper list
+			List<Element> paperList = boxElement.elements(EM_Paper);
+			for (Element paperElement : paperList)
+			{
+				Attribute paperAttStage = paperElement.attribute(EM_Paper_Att_Stage);
+				Attribute paperAttMoon = paperElement.attribute(EM_Paper_Att_Moon);
+				Attribute paperAttDate = paperElement.attribute(EM_Paper_Att_Date);
+				String stage = paperAttStage.getValue();
+				String moon = paperAttMoon.getValue();
+				String date = paperAttDate.getValue();
+				
+				//get doubleball
+				DoubleBall dblBall = analysisPaper(paperElement);
+				
+				//create lotteryStage
+				LotteryStage lotteryStage = new LotteryStage();
+				lotteryStage.setYear(year);
+				lotteryStage.setMoon(moon);
+				lotteryStage.setDate(date);
+				lotteryStage.setStage(stage);
+				lotteryStage.setDoubleBall(dblBall);
+				
+				//put in lottery manager
+				LotteryManager.getInstance().addLotteryStage(CommonData.Lottery_KEY_Total, lotteryStage);
+			}
+		}
+	}
+	
+	/**
+	 * analysis paper element
+	 * @param paperElement: element of paper
+	 * @return: DoubleBall class
+	 */
+	private DoubleBall analysisPaper(Element paperElement)
+	{
+		//create DoubleBall
+		DoubleBall dblBall = new DoubleBall();
+		
+		//get red ball
+		Element redBallElement = paperElement.element(EM_RedBall);
+		List<Element> redBallList = redBallElement.elements();
+		int i = 0;
+		for (Element redNumElement : redBallList)
+		{
+			String redNum = redNumElement.getText();
+			Ball ball = new Ball(EBallColor.s_eColorRed, Integer.valueOf(redNum).intValue());
+			dblBall.setRedBall(ball, i);
+		}
+		
+		//get blue ball
+		Element blueBallElement = paperElement.element(EM_BlueBall);
+		Element blueNumElement = blueBallElement.element(EM_Num);
+		String blueNum = blueNumElement.getText();
+		Ball blueBall = new Ball(EBallColor.s_eColorBlue, Integer.valueOf(blueNum).intValue());
+		dblBall.setBlueBall(blueBall);
+		
+		//get luck ball
+		Element luckBallElement = paperElement.element(EM_LuckBall);
+		if (luckBallElement != null)
+		{
+			Element luckNumElement = luckBallElement.element(EM_Num);
+			String luckNum = luckNumElement.getText();
+			Ball luckBall = new Ball(EBallColor.s_eColorBlue, Integer.valueOf(luckNum).intValue());
+			luckBall.changeBallType(Ball.s_nBallType_LUCK);
+			dblBall.setLuckBall(luckBall);
+		}
+		
+		return dblBall;
+	}
+	
+	private void analysisStatistic(Element root)
+	{
+		
 	}
 	
 	/**
@@ -112,82 +220,5 @@ public class AnalysisXML
 			
 			stage.add(lballElement);
 		}
-	}
-	
-	
-	private void analysisDom(Document doc)
-	{
-		Element root = doc.getRootElement();
-		
-		//get year
-		Attribute rootAttYear = root.attribute("year");
-		String year = rootAttYear.getValue();
-		
-		//get stage list
-		List<Element> stageList = root.elements("stage");
-		for (Element stageElement : stageList)
-		{
-			Attribute emAttStage = stageElement.attribute("value");
-			Attribute emAttMoon = stageElement.attribute("moon");
-			Attribute emAttDate = stageElement.attribute("date");
-			String stage = emAttStage.getValue();
-			String moon = emAttMoon.getValue();
-			String date = emAttDate.getValue();
-			
-			//get doubleball
-			DoubleBall dblBall = analysisStage(stageElement);
-			
-			//create lotteryStage
-			LotteryStage lotteryStage = new LotteryStage();
-			lotteryStage.setYear(year);
-			lotteryStage.setMoon(moon);
-			lotteryStage.setDate(date);
-			lotteryStage.setStage(stage);
-			lotteryStage.setDoubleBall(dblBall);
-			
-			//put in lottery manager
-			LotteryManager.getInstance().addLotteryStage(CommonData.Lottery_KEY_Total, lotteryStage);
-		}
-	}
-	
-	/**
-	 * analysis stage element
-	 * @param stageElement: element of stage
-	 * @return: DoubleBall class
-	 */
-	private DoubleBall analysisStage(Element stageElement)
-	{
-		DoubleBall dblBall = new DoubleBall();
-		
-		//get red ball
-		Element rball = stageElement.element("rball");
-		List<Element> redBallList = rball.elements();
-		int i = 0;
-		for (Element redBallElement : redBallList)
-		{
-			String redNum = redBallElement.getText();
-			Ball ball = new Ball(EBallColor.s_eColorRed, Integer.valueOf(redNum).intValue());
-			dblBall.setRedBall(ball, i);
-		}
-		
-		//get blue ball
-		Element bball = stageElement.element("bball");
-		Element bballElement = bball.element("em");
-		String blueNum = bballElement.getText();
-		Ball blueBall = new Ball(EBallColor.s_eColorBlue, Integer.valueOf(blueNum).intValue());
-		dblBall.setBlueBall(blueBall);
-		
-		//get luck ball
-		Element lball = stageElement.element("lball");
-		if (lball != null)
-		{
-			Element lballElement = lball.element("em");
-			String luckNum = lballElement.getText();
-			Ball luckBall = new Ball(EBallColor.s_eColorBlue, Integer.valueOf(luckNum).intValue());
-			luckBall.changeBallType(Ball.s_nBallType_LUCK);
-			dblBall.setLuckBall(luckBall);
-		}
-		
-		return dblBall;
 	}
 }
