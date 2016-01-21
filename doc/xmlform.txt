@@ -13,3 +13,18 @@
 		</paper>
 	</box>
 </lottery>
+
+<statistic>
+	<stage start="", end="">
+	</stage>
+	<red1 num="", count="">
+	</red1>
+	<red2 num="", count="">
+	</red2>
+	... ...
+	<red33 num="", count="">
+	</red33>
+	
+	<blue num="", count="">
+	</blue>
+</statistic>

@@ -99,7 +99,7 @@ public class AnalysisXML
 				lotteryStage.setDoubleBall(dblBall);
 				
 				//put in lottery manager
-				LotteryManager.getInstance().addLotteryStage(CommonData.Lottery_KEY_Total, lotteryStage);
+				LotteryManager.getInstance().addLotteryStage(CommonData.Lottery_KEY_XML, lotteryStage);
 			}
 		}
 	}
@@ -160,13 +160,16 @@ public class AnalysisXML
 		Document doc = DocumentHelper.createDocument();
 		
 		//create root
-		Element root = DocumentHelper.createElement("lottery");
-		root.addAttribute("year", lotteryBox.getYear());
+		Element root = DocumentHelper.createElement(EM_Lottery);
 		doc.setRootElement(root);
-		
-		List<Map.Entry<String, LotteryStage>> boxList = lotteryBox.getLotteryBoxByOrder();
-		
-		for (Map.Entry<String, LotteryStage> stageEntry : boxList)
+
+		//create box
+		Element boxElement = DocumentHelper.createElement(EM_Box);
+		root.add(boxElement);
+
+		//get stage list by order
+		List<Map.Entry<String, LotteryStage>> stageList = lotteryBox.getLotteryBoxByOrder();
+		for (Map.Entry<String, LotteryStage> stageEntry : stageList)
 		{
 			LotteryStage lotteryStage = stageEntry.getValue();
 
@@ -175,50 +178,55 @@ public class AnalysisXML
 			String date = lotteryStage.getDate();
 			DoubleBall dblBall = lotteryStage.getDoubleBall();
 			
-			Element stageElement = DocumentHelper.createElement("stage");
-			stageElement.addAttribute("value", stage);
-			stageElement.addAttribute("moon", moon);
-			stageElement.addAttribute("date", date);			
-			exportDoubleBall(stageElement, dblBall);
+			Element paperElement = DocumentHelper.createElement(EM_Paper);
+			paperElement.addAttribute(EM_Paper_Att_Stage, stage);
+			paperElement.addAttribute(EM_Paper_Att_Moon, moon);
+			paperElement.addAttribute(EM_Paper_Att_Date, date);			
+			exportDoubleBall(paperElement, dblBall);
 			
-			root.add(stageElement);
+			boxElement.add(paperElement);
 		}
 	}
 	
-	private void exportDoubleBall(Element stage, DoubleBall dblBall)
+	/**
+	 * export doubleBall to Element
+	 * @param paper: Element
+	 * @param dblBall: doubleBall
+	 */
+	private void exportDoubleBall(Element paper, DoubleBall dblBall)
 	{
 		//create red element
-		Element rballElement = DocumentHelper.createElement("rball");
+		Element rballElement = DocumentHelper.createElement(EM_RedBall);
 		Ball[] balls = dblBall.getRedBall();
 		for (int i = 0; i < balls.length; i++)
 		{
-			Element em = DocumentHelper.createElement("em");
-			em.addText( String.valueOf(balls[i].m_nBallNum) );
+			Element remNumElement = DocumentHelper.createElement(EM_Num);
+			remNumElement.addText( String.valueOf(balls[i].m_nBallNum) );
 			
-			rballElement.add(em);
+			rballElement.add(remNumElement);
 		}
 		
-		stage.add(rballElement);
+		paper.add(rballElement);
 		
 		//create blue element
-		Element bballElement = DocumentHelper.createElement("bball");
+		Element bballElement = DocumentHelper.createElement(EM_BlueBall);
 		Ball blueBall = dblBall.getBlueBall();
-		Element bem = DocumentHelper.createElement("em");
-		bem.addText( String.valueOf(blueBall.m_nBallNum) );
-		bballElement.add(bem);
+		Element blueNumElement = DocumentHelper.createElement(EM_Num);
+		blueNumElement.addText( String.valueOf(blueBall.m_nBallNum) );
+		bballElement.add(blueNumElement);
 		
-		stage.add(bballElement);
+		paper.add(bballElement);
 		
 		//create luck element
 		Ball luckBall = dblBall.getLuckBall();
 		if (luckBall != null)
 		{
-			Element lballElement = DocumentHelper.createElement("lball");
-			Element lem = DocumentHelper.createElement("em");
-			lem.addText( String.valueOf(luckBall.m_nBallNum) );
-			lballElement.add(lem);
+			Element lballElement = DocumentHelper.createElement(EM_LuckBall);
+			Element luckNumElement = DocumentHelper.createElement(EM_Num);
+			luckNumElement.addText( String.valueOf(luckBall.m_nBallNum) );
+			lballElement.add(luckNumElement);
 			
-			stage.add(lballElement);
+			paper.add(lballElement);
 		}
 	}
 }
