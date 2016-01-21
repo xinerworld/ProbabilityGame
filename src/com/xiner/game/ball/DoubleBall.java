@@ -26,16 +26,16 @@ public class DoubleBall
 	 */
 	public static final int m_nRedSize = 6;
 	/**
-	 * red ball have num
+	 * red ball count
 	 */
-	private int m_nRedNum = 0;
+	private int m_nRedCount = 0;
 	
 	public DoubleBall()
 	{
 		m_RedBall = new Ball[m_nRedSize];
 		m_BlueBall = null;
 		m_LuckBall = null;
-		m_nRedNum = 0;
+		m_nRedCount = 0;
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class DoubleBall
 			{
 				m_RedBall[i] = ball;
 				
-				m_nRedNum++;
+				m_nRedCount++;
 				retCode = ReturnCode.RED_BALL_CREAT_OK;
 				break;
 			}
@@ -96,7 +96,7 @@ public class DoubleBall
 				
 				m_RedBall[i] = ball;
 				
-				m_nRedNum++;
+				m_nRedCount++;
 				retCode = ReturnCode.RED_BALL_CREAT_OK;
 				break;
 			}
@@ -107,7 +107,7 @@ public class DoubleBall
 			}
 		}
 		
-		if (m_nRedNum == m_nRedSize)
+		if (m_nRedCount == m_nRedSize)
 		{//if red full
 			retCode = ReturnCode.RED_BALL_CREAT_FULL;
 		}
@@ -121,7 +121,7 @@ public class DoubleBall
 	 */
 	public int isRedBallFull()
 	{
-		return m_nRedNum == m_nRedSize ? ReturnCode.RED_BALL_CREAT_FULL : ReturnCode.RED_BALL_CREAT_NOT_FULL;
+		return m_nRedCount == m_nRedSize ? ReturnCode.RED_BALL_CREAT_FULL : ReturnCode.RED_BALL_CREAT_NOT_FULL;
 	}
 	
 	/**
@@ -130,7 +130,7 @@ public class DoubleBall
 	 */
 	public void setDoubleBall(int[] anDoubleBall)
 	{
-		m_nRedNum = 0;
+		m_nRedCount = 0;
 		int size = anDoubleBall.length;
 		
 		for (int i = 0; i < size; i++)
@@ -139,7 +139,7 @@ public class DoubleBall
 			{//0,1,2,3,4,5red ball
 				m_RedBall[i] = new Ball(EBallColor.s_eColorRed, anDoubleBall[i]);
 				
-				m_nRedNum++;
+				m_nRedCount++;
 			}
 			else
 			{
@@ -234,12 +234,28 @@ public class DoubleBall
 	}
 	
 	/**
-	 * get red have num
-	 * @return: red have num
+	 * get all red ball
+	 * @return: all red ball
 	 */
-	public int getRedNum()
+	public Ball[] getRedBall()
 	{
-		return m_nRedNum;
+		Ball[] ball = new Ball[m_nRedSize+1];
+		
+		for (int i = 0; i < m_nRedSize; i++)
+		{
+			ball[i] = m_RedBall[i];
+		}
+		
+		return ball;
+	}
+	
+	/**
+	 * get red count
+	 * @return: red count
+	 */
+	public int getRedCount()
+	{
+		return m_nRedCount;
 	}
 	
 	/**

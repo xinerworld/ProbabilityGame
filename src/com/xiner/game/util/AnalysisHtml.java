@@ -43,8 +43,6 @@ public class AnalysisHtml
 				int tdIndex = 0;
 				for (Element tdElement : tdList)
 				{
-					System.out.println(tdIndex + " : \n" + tdElement.html() + "\n\n");
-
 					switch (tdIndex)
 					{
 					case 0:

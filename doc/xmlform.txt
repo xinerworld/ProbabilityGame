@@ -1,0 +1,13 @@
+<lottery year="">
+	<stage value="", moon="", date="">
+		<rball>
+			<em></em><em></em><em></em><em></em><em></em><em></em>
+		</rball>
+		<bball>
+			<em></em>
+		</bball>
+		<lball>
+			<em></em>
+		</lball>
+	</stage>f
+</lottery>
