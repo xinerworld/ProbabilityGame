@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.xiner.game.ball.LotteryStage;
+import com.xiner.game.ball.LotteryStatistic;
 import com.xiner.game.ball.LotteryContain;
 
 /**
@@ -19,7 +20,9 @@ public class LotteryManager
 	 * key: lottery flag name
 	 * value: lottery content
 	 */
-	private Map<String, LotteryContain> m_Lottery = null;	
+	private Map<String, LotteryContain> m_Lottery = null;
+	
+	private Map<String, LotteryStatistic> m_Statistic = null;
 	
 	public LotteryManager()
 	{
@@ -88,30 +91,25 @@ public class LotteryManager
 				
 		tContain.addLotteryContain(sContain);
 	}
+
+	public void addLotteryStatistic(String key, LotteryStatistic lotteryStatistic)
+	{
+		
+	}
 	
-//	int nSize = HGlassStore.sMapGlassSlidesInfo.size();
-//
-//	File[] fileArray = new File[nSize];
-//	
-//	int i = 0;
-//	
-//	List<Map.Entry<Long, HGlassSlideInfo>> mappingList = null; 
-//	//通过ArrayList构造函数把map.entrySet()转换成list 
-//	mappingList = new ArrayList<Map.Entry<Long, HGlassSlideInfo>>(HGlassStore.sMapGlassSlidesInfo.entrySet()); 
-//	//通过比较器实现比较排序 
-//	Collections.sort(mappingList, new Comparator<Map.Entry<Long, HGlassSlideInfo>>()
-//	{
-//		public int compare(Map.Entry<Long, HGlassSlideInfo> mapping1, Map.Entry<Long, HGlassSlideInfo> mapping2)
-//		{
-//			return mapping1.getKey().compareTo(mapping2.getKey());
-//		}
-//	});
-//	
-//	for (Map.Entry<Long, HGlassSlideInfo> mapping : mappingList)
-//	{					
-//		HGlassSlideInfo slideInfo = (HGlassSlideInfo) mapping.getValue();
-//		File file = new File(datapath, "glass"+slideInfo.indexInfo+".png");
-//		fileArray[i] = file;
-//		i++;
-//	}
+	public LotteryStatistic getLotteryStatistic(String key)
+	{
+		LotteryStatistic lotteryStatistic = null;
+		
+		lotteryStatistic = m_Statistic.get(key);
+		
+		if (lotteryStatistic == null)
+		{
+			lotteryStatistic = new LotteryStatistic();
+			
+			m_Statistic.put(key, lotteryStatistic);
+		}
+		
+		return lotteryStatistic;
+	}
 }
