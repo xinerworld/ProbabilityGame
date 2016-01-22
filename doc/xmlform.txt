@@ -17,14 +17,19 @@
 <statistic>
 	<stage start="", end="">
 	</stage>
-	<red1 num="", count="">
-	</red1>
-	<red2 num="", count="">
-	</red2>
-	... ...
-	<red33 num="", count="">
-	</red33>
-	
-	<blue num="", count="">
-	</blue>
+	<total>
+		total
+	</total>
+	<redcount>
+		count1,count2,...count33
+	</redcount>
+	<redstasc>
+		statistic1,statistic2,...statistic33
+	</redstasc>
+	<bluecount>
+		count1,count2,...count16
+	</bluecount>
+	<bluestasc>
+		statistic1,statistic2,...statistic16
+	</bluestasc>
 </statistic>

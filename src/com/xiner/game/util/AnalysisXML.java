@@ -1,5 +1,9 @@
 package com.xiner.game.util;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -8,19 +12,24 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 
 import com.xiner.game.ball.Ball;
 import com.xiner.game.ball.Ball.EBallColor;
 import com.xiner.game.ball.DoubleBall;
 import com.xiner.game.ball.LotteryBox;
+import com.xiner.game.ball.LotteryContain;
 import com.xiner.game.ball.LotteryStage;
+import com.xiner.game.ball.LotteryStatistic;
 import com.xiner.game.data.CommonData;
 
 public class AnalysisXML
 {
 	private final String EM_Lottery = "lottery";
 	private final String EM_Statistic = "statistic";
+	
 	private final String EM_Box = "box";
 	private final String EM_Box_Att_Year = "year";
 	private final String EM_Paper = "paper";
@@ -31,6 +40,15 @@ public class AnalysisXML
 	private final String EM_BlueBall = "blueBall";
 	private final String EM_LuckBall = "luckBall";
 	private final String EM_Num = "num";
+	
+	private final String EM_Stage = "stage";
+	private final String EM_Stage_Att_Start = "start";
+	private final String EM_Stage_Att_End = "end";
+	private final String EM_Total = "total";
+	private final String EM_RedCount = "redcount";
+	private final String EM_RedStatistic = "redstatistic";
+	private final String EM_BlueCount = "bluecount";
+	private final String EM_BlueStatistic = "bluestatistic";
 
 	public AnalysisXML()
 	{
@@ -148,12 +166,90 @@ public class AnalysisXML
 	
 	private void analysisStatistic(Element root)
 	{
+		LotteryStatistic lotteryStatistic = new LotteryStatistic();
 		
+		//stage
+		Element stageEM = root.element(EM_Stage);
+		Attribute stageAttStart = stageEM.attribute(EM_Stage_Att_Start);
+		Attribute stageAttEnd = stageEM.attribute(EM_Stage_Att_End);
+		lotteryStatistic.setStartStage(stageAttStart.getValue());
+		lotteryStatistic.setEndStage(stageAttEnd.getValue());
+		
+		//total
+		Element totalEM = root.element(EM_Total);
+		String total = totalEM.getText();
+		lotteryStatistic.setTotal(Integer.valueOf(total).intValue());
+		
+		//red count
+		Element redCount = root.element(EM_RedCount);
+		String strRedCounts = redCount.getText();
+		int[] redCountAry = getIntAry(strRedCounts);
+		lotteryStatistic.setRedCount(redCountAry);
+		
+		//red statistic
+		Element redStatistic = root.element(EM_RedStatistic);
+		String strRedStatsc = redStatistic.getText();
+		float[] redStatscAry = getFloatAry(strRedStatsc);
+		lotteryStatistic.setRedStatistic(redStatscAry);
+		
+		//blue count
+		Element blueCount = root.element(EM_BlueCount);
+		String strBlueCounts = blueCount.getText();
+		int[] blueCountAry = getIntAry(strBlueCounts);
+		lotteryStatistic.setBlueCount(blueCountAry);
+		
+		//blue statistic
+		Element blueStatistic = root.element(EM_BlueStatistic);
+		String strBlueStatsc = blueStatistic.getText();
+		float[] blueStatscAry = getFloatAry(strBlueStatsc);
+		lotteryStatistic.setBlueStatistic(blueStatscAry);
+	}
+	
+	private int[] getIntAry(String strNum)
+	{
+		String[] strNumAry = strNum.split(",");
+		int[] nums = new int[strNumAry.length];
+		
+		for (int i = 0; i < nums.length; i++)
+		{
+			nums[i] = Integer.valueOf(strNumAry[i]).intValue();
+		}
+		
+		return nums;
+	}
+	
+	private float[] getFloatAry(String strNum)
+	{
+		String[] strNumAry = strNum.split(",");
+		float[] nums = new float[strNumAry.length];
+		
+		for (int i = 0; i < nums.length; i++)
+		{
+			nums[i] = Float.valueOf(strNumAry[i]).floatValue();
+		}
+		
+		return nums;
+	}
+	
+	/**
+	 * LotteryContain export to xml by xml path
+	 * @param xmlPath: xml full path
+	 * @param lotteryContain: LotteryContain
+	 */
+	public void exportXml(String xmlPath, LotteryContain lotteryContain)
+	{
+		Map<Integer, LotteryBox> containMap = lotteryContain.getLotteryContain();
+		
+		for (LotteryBox entryBox : containMap.values())
+		{
+			exportXml(xmlPath, entryBox);
+		}
 	}
 	
 	/**
 	 * LotteryBox export to xml by xml path
 	 * @param xmlPath: xml full path
+	 * @param lotteryBox: LotteryBox
 	 */
 	public void exportXml(String xmlPath, LotteryBox lotteryBox)
 	{
@@ -165,6 +261,8 @@ public class AnalysisXML
 
 		//create box
 		Element boxElement = DocumentHelper.createElement(EM_Box);
+		String year = lotteryBox.getYear();
+		boxElement.addText(year);
 		root.add(boxElement);
 
 		//get stage list by order
@@ -186,6 +284,10 @@ public class AnalysisXML
 			
 			boxElement.add(paperElement);
 		}
+		
+		//write xml
+		String xmlName = xmlPath+year+".xml";
+		writeXml(xmlName, doc);
 	}
 	
 	/**
@@ -227,6 +329,27 @@ public class AnalysisXML
 			lballElement.add(luckNumElement);
 			
 			paper.add(lballElement);
+		}
+	}
+
+	/**
+	 * write xml
+	 * @param xmlPath: xml path
+	 * @param document: xml document
+	 */
+	private void writeXml(String xmlPath, Document document)
+	{
+		try
+		{
+			OutputFormat format = new OutputFormat("    ",true);  
+			format.setEncoding("UTF-8");//设置编码格式  
+			XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(xmlPath),format);
+     
+			xmlWriter.write(document);  
+			xmlWriter.close();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 }
