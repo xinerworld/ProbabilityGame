@@ -2,9 +2,13 @@ package com.xiner.game.data;
 
 public class CommonData
 {
-	public static final String Lottery_KEY_Analysis = "analysis";
+	public static final String KEY_Lottery_TEMP = "lotteryTemp";
 	
-	public static final String Lottery_KEY_Total = "total";
+	public static final String KEY_Lottery_Total = "total";
 	
-	public static final String Lottery_KEY_XML = "xml";
+	public static final String KEY_Lottery_AnalysisHTML = "analysisHTML";
+	
+	public static final String KEY_Lottery_AnalysisXML = "analysisXML";
+	
+	public static final String KEY_Statistic_TEMP = "statisticTemp";
 }

@@ -90,7 +90,7 @@ public class AnalysisHtml
 				}// tdList
 				
 				lotteryStage.setDoubleBall(dblBall);
-				LotteryManager.getInstance().addLotteryStage(CommonData.Lottery_KEY_Analysis, lotteryStage);
+				LotteryManager.getInstance().addLotteryStage(LotteryManager.getInstance().getKEY_Lottery(), lotteryStage);
 			}//if %4
 			index++;
 		}//trlist

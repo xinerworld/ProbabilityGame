@@ -19,6 +19,11 @@ public class LotteryStatistic
 	
 	public LotteryStatistic()
 	{
+		init();
+	}
+	
+	private void init()
+	{
 		mStartStage = null;
 		mEndStage = null;
 		mTotal = 0;
@@ -26,6 +31,11 @@ public class LotteryStatistic
 		mBlueCount = new int[Ball.s_nBlueBall_Range];
 		mRedStatistic = new float[Ball.s_nRedBall_Range];
 		mBlueStatistic = new float[Ball.s_nBlueBall_Range];
+	}
+	
+	public void clear()
+	{
+		init();
 	}
 	
 	public String getStartStage()
@@ -136,5 +146,47 @@ public class LotteryStatistic
 	public void setBlueStatistic(int index, float blueStatisitic)
 	{
 		this.mBlueStatistic[index] = blueStatisitic;
+	}
+	
+	/**
+	 * update lottery stage
+	 * @param lotteryStage: LotteryStage
+	 */
+	public void updateByLotteryStage(LotteryStage lotteryStage)
+	{
+		DoubleBall dblBall = lotteryStage.getDoubleBall();
+		
+		Ball[] redBall = dblBall.getRedBall();
+		Ball blueBall = dblBall.getBlueBall();
+		
+		//update red count
+		for (int i = 0; i < redBall.length; i++)
+		{
+			int redNum = redBall[i].m_nBallNum;
+			mRedCount[redNum-1]++;
+		}
+		
+		//update blue count
+		int blueNum = blueBall.m_nBallNum;
+		mBlueCount[blueNum-1]++;
+		
+		//update total
+		mTotal++;
+	}
+	
+	/**
+	 * calcul
+	 */
+	public void updateCalcul()
+	{
+		for (int i = 0; i < Ball.s_nRedBall_Range; i++)
+		{
+			mRedStatistic[i] = (float)(mRedCount[i] * 100) / (float)mTotal;
+		}
+		
+		for (int i = 0; i < Ball.s_nBlueBall_Range; i++)
+		{
+			mBlueStatistic[i] = (float)(mBlueCount[i] * 100) / (float)mTotal;
+		}
 	}
 }

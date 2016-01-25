@@ -114,7 +114,7 @@ public class AnalysisXML
 				lotteryStage.setDoubleBall(dblBall);
 				
 				//put in lottery manager
-				LotteryManager.getInstance().addLotteryStage(CommonData.Lottery_KEY_XML, lotteryStage);
+				LotteryManager.getInstance().addLotteryStage(LotteryManager.getInstance().getKEY_Lottery(), lotteryStage);
 			}
 		}
 	}
@@ -138,6 +138,7 @@ public class AnalysisXML
 			String redNum = redNumElement.getText();
 			Ball ball = new Ball(EBallColor.s_eColorRed, Integer.valueOf(redNum).intValue());
 			dblBall.setRedBall(ball, i);
+			i++;
 		}
 		
 		//get blue ball
@@ -200,6 +201,8 @@ public class AnalysisXML
 		String strBlueStatsc = blueStatistic.getText();
 		float[] blueStatscAry = getFloatAry(strBlueStatsc);
 		lotteryStatistic.setBlueStatistic(blueStatscAry);
+		
+		LotteryManager.getInstance().putLotteryStatistic(LotteryManager.getInstance().getKEY_Statistic(), lotteryStatistic);
 	}
 	
 	private int[] getIntAry(String strNum)
@@ -226,6 +229,91 @@ public class AnalysisXML
 		}
 		
 		return nums;
+	}
+	
+	public void exportXML(String xmlPath, LotteryStatistic lotteryStatistic)
+	{
+		Document doc = DocumentHelper.createDocument();
+		
+		//create root
+		Element root = DocumentHelper.createElement(EM_Statistic);
+		doc.setRootElement(root);
+		
+		//create stage
+		Element stageElement = DocumentHelper.createElement(EM_Stage);
+		String startStage = lotteryStatistic.getStartStage();
+		String endStage = lotteryStatistic.getEndStage();
+		stageElement.addAttribute(EM_Stage_Att_Start, startStage);
+		stageElement.addAttribute(EM_Stage_Att_End, endStage);
+		root.add(stageElement);
+		
+		//create total
+		Element totalElement = DocumentHelper.createElement(EM_Total);
+		int total = lotteryStatistic.getTotal();
+		totalElement.setText(String.valueOf(total));
+		root.add(totalElement);
+		
+		//create red count
+		Element redCElement = DocumentHelper.createElement(EM_RedCount);
+		StringBuffer redCountBuf = new StringBuffer();
+		int[] redCount = lotteryStatistic.getRedCount();
+		for (int i = 0; i < redCount.length; i++)
+		{
+			if (i != 0)
+			{
+				redCountBuf.append(",");
+			}
+			redCountBuf.append(redCount[i]);
+		}
+		redCElement.setText(redCountBuf.toString());
+		root.add(redCElement);
+		
+		//create red statistic
+		Element redSElement = DocumentHelper.createElement(EM_RedStatistic);
+		StringBuffer redStatisticBuf = new StringBuffer();
+		float[] redStatistic = lotteryStatistic.getRedStatistic();
+		for (int i = 0; i < redStatistic.length; i++)
+		{
+			if (i != 0)
+			{
+				redStatisticBuf.append(",");
+			}
+			redStatisticBuf.append(redStatistic[i]);
+		}
+		redSElement.setText(redStatisticBuf.toString());
+		root.add(redSElement);
+		
+		//create blue count
+		Element blueCElement = DocumentHelper.createElement(EM_BlueCount);
+		StringBuffer blueCountBuf = new StringBuffer();
+		int[] blueCount = lotteryStatistic.getBlueCount();
+		for (int i = 0; i < blueCount.length; i++)
+		{
+			if (i != 0)
+			{
+				blueCountBuf.append(",");
+			}
+			blueCountBuf.append(blueCount[i]);
+		}
+		blueCElement.setText(blueCountBuf.toString());
+		root.add(blueCElement);
+		
+		//create blue statistic
+		Element blueSElement = DocumentHelper.createElement(EM_BlueStatistic);
+		StringBuffer blueStatisticBuf = new StringBuffer();
+		float[] blueStatistic = lotteryStatistic.getBlueStatistic();
+		for (int i = 0; i < blueStatistic.length; i++)
+		{
+			if (i != 0)
+			{
+				blueStatisticBuf.append(",");
+			}
+			blueStatisticBuf.append(blueStatistic[i]);
+		}
+		blueSElement.setText(blueStatisticBuf.toString());
+		root.add(blueSElement);
+		
+		writeXml(xmlPath, doc);
 	}
 	
 	/**
@@ -259,7 +347,7 @@ public class AnalysisXML
 		//create box
 		Element boxElement = DocumentHelper.createElement(EM_Box);
 		String year = lotteryBox.getYear();
-		boxElement.addText(year);
+		boxElement.addAttribute(EM_Box_Att_Year, year);
 		root.add(boxElement);
 
 		//get stage list by order

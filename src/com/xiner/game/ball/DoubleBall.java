@@ -239,7 +239,7 @@ public class DoubleBall
 	 */
 	public Ball[] getRedBall()
 	{
-		Ball[] ball = new Ball[m_nRedSize+1];
+		Ball[] ball = new Ball[m_nRedSize];
 		
 		for (int i = 0; i < m_nRedSize; i++)
 		{
