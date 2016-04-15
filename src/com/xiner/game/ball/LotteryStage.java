@@ -62,7 +62,13 @@ public class LotteryStage
 	{
 		this.mDate = mDate;
 	}
-	
+
+    public String getCalendar()
+    {
+        String calendar = mYear+"-"+mMoon+"-"+mDate;
+        return calendar;
+    }
+
 	public void setCalendar(String calendar)
 	{
 		String[] calSplit = calendar.split("-");

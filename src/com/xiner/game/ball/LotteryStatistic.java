@@ -154,6 +154,11 @@ public class LotteryStatistic
 	 */
 	public void updateByLotteryStage(LotteryStage lotteryStage)
 	{
+        int stage = Integer.parseInt(lotteryStage.getStage());
+        int curStage = Integer.parseInt(mEndStage);
+        if (stage <= curStage)
+            return;
+
 		DoubleBall dblBall = lotteryStage.getDoubleBall();
 		
 		Ball[] redBall = dblBall.getRedBall();

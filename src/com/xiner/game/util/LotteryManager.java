@@ -126,6 +126,35 @@ public class LotteryManager
 		
 		return lotteryContain;
 	}
+
+    public LotteryStage getLastLotteryStage(String lotteryKey)
+    {
+        LotteryStage lotteryStage = null;
+
+        LotteryContain lotteryContain = getLotteryContain(lotteryKey);
+
+        if (lotteryContain != null)
+        {
+            Map<Integer, LotteryBox> boxmap = lotteryContain.getLotteryContain();
+
+            int year = 0;
+            for (LotteryBox box : boxmap.values())
+            {
+                int y = Integer.parseInt(box.getYear());
+                if (y > year)
+                {
+                    year = y;
+                }
+            }
+
+            LotteryBox box = boxmap.get(new Integer(year));
+
+            List<Entry<String, LotteryStage>> list = box.getLotteryBoxByOrder();
+            lotteryStage = list.get(list.size()-1).getValue();
+        }
+
+        return lotteryStage;
+    }
 	
 	/**
 	 * source lottery add to traget lottery

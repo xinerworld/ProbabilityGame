@@ -257,53 +257,58 @@ public class DoubleBall
 	{
 		return m_nRedCount;
 	}
-	
+
+    public String getBall()
+    {
+        StringBuffer ballStr = new StringBuffer("red: ");
+
+        for (int i = 0; i < m_RedBall.length; i++)
+        {
+            if (m_RedBall[i] == null)
+            {
+                ballStr.append("NA");
+            }
+            else
+            {
+                if (m_RedBall[i].m_nBallNum < 10)
+                {
+                    ballStr.append(String.format("%02d", m_RedBall[i].m_nBallNum));
+                }
+                else
+                {
+                    ballStr.append(m_RedBall[i].m_nBallNum);
+                }
+            }
+
+            ballStr.append(" ");
+        }
+
+        ballStr.append("blue: ");
+
+        if (m_BlueBall == null)
+        {
+            ballStr.append("NA");
+        }
+        else
+        {
+            if (m_BlueBall.m_nBallNum < 10)
+            {
+                ballStr.append(String.format("%02d", m_BlueBall.m_nBallNum));
+            }
+            else
+            {
+                ballStr.append(m_BlueBall.m_nBallNum);
+            }
+        }
+
+        return  ballStr.toString();
+    }
+
 	/**
 	 * paint double ball num
 	 */
 	public void paintBall()
 	{
-		StringBuffer ballStr = new StringBuffer("red: ");
-		
-		for (int i = 0; i < m_RedBall.length; i++)
-		{
-			if (m_RedBall[i] == null)
-			{
-				ballStr.append("NA");
-			}
-			else
-			{
-				if (m_RedBall[i].m_nBallNum < 10)
-				{
-					ballStr.append(String.format("%02d", m_RedBall[i].m_nBallNum));     
-				}
-				else
-				{
-					ballStr.append(m_RedBall[i].m_nBallNum);
-				}
-			}
-			
-			ballStr.append(" ");
-		}
-		
-		ballStr.append("blue: ");
-		
-		if (m_BlueBall == null)
-		{
-			ballStr.append("NA");
-		}
-		else
-		{
-			if (m_BlueBall.m_nBallNum < 10)
-			{
-				ballStr.append(String.format("%02d", m_BlueBall.m_nBallNum));     
-			}
-			else
-			{
-				ballStr.append(m_BlueBall.m_nBallNum);
-			}
-		}
-				
-		System.out.println(ballStr.toString());
+		System.out.println(getBall());
 	}
 }
